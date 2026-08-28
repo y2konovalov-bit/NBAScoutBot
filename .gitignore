@@ -1,1 +1,4 @@
 .env
+subscriptions.json
+players_stats_cache.json
+standings_cache.json
