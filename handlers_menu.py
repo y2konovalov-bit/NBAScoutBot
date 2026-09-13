@@ -11,3 +11,6 @@ def register_menu_handlers(bot):
     @bot.message_handler(commands=['help'])
     def handle_help(message):
         bot.send_message(message.chat.id, 'Вот что я умею:\n/schedule — расписание\n...')
+
+
+
