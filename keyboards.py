@@ -22,3 +22,9 @@ def schedule_type_keyboard():
     markup.add(types.InlineKeyboardButton('Ближайшие игры', callback_data='games:upcoming'), # общая_часть:индивидуальная_часть
                types.InlineKeyboardButton('Прошедшие игры', callback_data='games:past'))
     return markup
+
+def confirmation_keyboard():
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    markup.add((types.InlineKeyboardButton('Подтверждаю✅', callback_data='confirmation:confirm')),
+                types.InlineKeyboardButton('Отмена❌', callback_data='confirmation:cancel'))
+    return markup

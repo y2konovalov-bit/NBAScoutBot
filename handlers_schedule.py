@@ -1,4 +1,4 @@
-from keyboards import main_menu, teams_keyboard, schedule_type_keyboard
+from keyboards import main_menu, teams_keyboard, schedule_type_keyboard, back_to_main_menu
 from states import SheduleStates
 
 MOCK_GAMES = {
