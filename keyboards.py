@@ -17,14 +17,27 @@ def teams_keyboard():
     markup.add(*buttons)
     return markup
 
+
 def schedule_type_keyboard():
     markup = types.InlineKeyboardMarkup(row_width=1)
     markup.add(types.InlineKeyboardButton('Ближайшие игры', callback_data='games:upcoming'), # общая_часть:индивидуальная_часть
                types.InlineKeyboardButton('Прошедшие игры', callback_data='games:past'))
     return markup
 
-def confirmation_keyboard():
+def subscribe_teams_keyboard():
     markup = types.InlineKeyboardMarkup(row_width=2)
-    markup.add((types.InlineKeyboardButton('Подтверждаю✅', callback_data='confirmation:confirm')),
-                types.InlineKeyboardButton('Отмена❌', callback_data='confirmation:cancel'))
+    buttons = [
+        types.InlineKeyboardButton(team, callback_data=f'sub_team:{team}') 
+        for team in TEAM_NAMES
+    ]
+    markup.add(*buttons)
+    return markup
+
+def favorites_teams(team_names):
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    buttons = [
+        types.InlineKeyboardButton(f'❌{team}', callback_data=f'unsub_team:{team}') 
+        for team in team_names
+    ]
+    markup.add(*buttons)
     return markup

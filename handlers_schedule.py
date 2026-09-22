@@ -1,27 +1,18 @@
-from keyboards import main_menu, teams_keyboard, schedule_type_keyboard, back_to_main_menu
+from keyboards import main_menu, teams_keyboard, schedule_type_keyboard, main_menu
 from states import SheduleStates
+from api_games import get_games
+from teams import TEAM_IDS
 
-MOCK_GAMES = {
-    "upcoming": [
-        {"date": "2026-09-10", "opponent": "Celtics"},
-        {"date": "2026-09-14", "opponent": "Warriors"},
-    ],
-    "past": [
-        {"date": "2026-08-28", "opponent": "Bulls", "score": "110:102"},
-        {"date": "2026-08-25", "opponent": "Heat", "score": "98:101"},
-    ],
-}
 
-def format_upcoming(games):
-    lines = ['Предстоящие матчи:']
-    for g in games:
-        lines.append(f" {g['date']} — {g['opponent']}")
-    return "\n".join(lines)
-
-def format_past(games):
-    lines = ["Прошедшие матчи:"]
-    for g in games:
-        lines.append(f" {g['date']} — {g['opponent']} ({g['score']})")
+def format_games(games, team_name):
+    lines = [f'Матчи команды {team_name}:']
+    for game in games:
+        if game['score'] is None:
+            lines.append(f"• {game['date']} — против {game['opponent']}")
+        else:
+            lines.append(
+                f"• {game['date']} — против {game['opponent']}, "
+                f"счёт: {game['score']}")
     return "\n".join(lines)
 
 def register_schedule_handlers(bot):
@@ -58,14 +49,15 @@ def register_schedule_handlers(bot):
         with bot.retrieve_data(callback.from_user.id, callback.message.chat.id) as data:
             team_name = data.get('team', 'Команда')
 
-        games = MOCK_GAMES.get(schedule_type, [])
+        team_id = TEAM_IDS.get(team_name)
+        games = get_games(team_id, schedule_type)
 
-        if schedule_type == 'upcoming':
-            text = f'Команда: {team_name} \n\n' + format_upcoming(games)
-        elif schedule_type == 'past':
-            text = f'Команда: {team_name} \n\n' + format_past(games)
+        if games is None:
+            text = f'Сервис перегружен, повторите попытку чуть позже'
+        elif not games:
+            text = f'Для команды {team_name} не было найдено ни одной игры'
         else:
-            text = 'Неизвестный тип расписания'
+            text = format_games(games, team_name)
 
         bot.answer_callback_query(callback.id)
         bot.send_message(callback.message.chat.id, text)
