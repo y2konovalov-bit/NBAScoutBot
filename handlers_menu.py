@@ -33,4 +33,10 @@ def register_menu_handlers(bot):
     def handle_help(message):
         bot.send_message(message.chat.id, TEXT_HELP)
 
+    @bot.message_handler(commands=['cancel'])
+    def handle_cancel(message):
+        bot.delete_state(message.from_user.id, message.chat.id)
+        bot.send_message(message.chat.id, "Вы вышли в главное меню", reply_markup=main_menu())
+        
+
 

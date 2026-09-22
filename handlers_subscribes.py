@@ -43,5 +43,20 @@ def register_subscribe_handlers(bot):
         bot.send_message(message.from_user.id,
                         f"Вот команды, на которые ты подписан:\n(нажми на команду, чтобы отписаться от нее)",
                         reply_markup=favorites_teams(teams))
+
+    @bot.callback_query_handler(func=lambda call: call.data.startswith('unsub_team:'))
+    def handle_unsubscribe(callback):
+        team_name = callback.data.split(':')[1]
+        deleted = delete_user_team(callback.from_user.id, team_name)
+
+        bot.answer_callback_query(callback.id)
+        
+        if deleted:
+            text = f'Вы отписались от команды {team_name}❌'
+        else:
+            text = f'Вы не были подписаны на команду {team_name}!'
+        bot.send_message(callback.message.chat.id, text)
+        bot.delete_state(callback.from_user.id, callback.message.chat.id)
+        bot.send_message(callback.message.chat.id, reply_markup=main_menu())
         
     
