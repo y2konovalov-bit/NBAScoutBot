@@ -26,9 +26,8 @@ def register_subscribe_handlers(bot):
             text = f'Вы подписались на команду {team_name}⭐'
         else:
             text = f'Вы уже подписаны на команду {team_name}!'
-        bot.send_message(callback.message.chat.id, text)
+        bot.send_message(callback.message.chat.id, text, reply_markup=main_menu())
         bot.delete_state(callback.from_user.id, callback.message.chat.id)
-        bot.send_message(callback.message.chat.id, reply_markup=main_menu())
         
     @bot.message_handler(state=SubscribeStates.choose_team)
     def handle_wrong_input_subscribe(message):
@@ -47,16 +46,21 @@ def register_subscribe_handlers(bot):
     @bot.callback_query_handler(func=lambda call: call.data.startswith('unsub_team:'))
     def handle_unsubscribe(callback):
         team_name = callback.data.split(':')[1]
-        deleted = delete_user_team(callback.from_user.id, team_name)
+        delete_user_team(callback.from_user.id, team_name)
+        teams = load_user_teams(callback.from_user.id)
 
-        bot.answer_callback_query(callback.id)
+        bot.answer_callback_query(callback.id, text=f'Отписались от {team_name}')
         
-        if deleted:
-            text = f'Вы отписались от команды {team_name}❌'
+        if teams:
+            bot.edit_message_text(
+                f"Вот команды, на которые ты подписан:\n(нажми на команду, чтобы отписаться от нее)",
+                callback.message.chat.id,
+                callback.message.message_id,
+                reply_markup=favorites_teams(teams)
+            )
         else:
-            text = f'Вы не были подписаны на команду {team_name}!'
-        bot.send_message(callback.message.chat.id, text)
-        bot.delete_state(callback.from_user.id, callback.message.chat.id)
-        bot.send_message(callback.message.chat.id, reply_markup=main_menu())
-        
-    
+            bot.edit_message_text(
+                'Больше нет подписок. Нажми «Подписаться», чтобы добавить команду',
+                callback.message.chat.id,
+                callback.message.message_id
+            )

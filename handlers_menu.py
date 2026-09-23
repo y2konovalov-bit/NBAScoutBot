@@ -1,5 +1,6 @@
 import telebot
-from keyboards import main_menu
+from keyboards import main_menu, schedule_type_keyboard
+
 
 def register_menu_handlers(bot):
     TEXT_START="Привет! Я NBA Scout - помогу следить за расписанием и любимыми командами."
@@ -38,5 +39,11 @@ def register_menu_handlers(bot):
         bot.delete_state(message.from_user.id, message.chat.id)
         bot.send_message(message.chat.id, "Вы вышли в главное меню", reply_markup=main_menu())
         
-
-
+def register_stale_callback_handler(bot):
+    @bot.callback_query_handler(func=lambda call: True)
+    def handle_stale_callback(call):
+        bot.answer_callback_query(call.id, text='Сессия устарела')
+        bot.send_message(
+            call.message.chat.id,
+            'Эта кнопка уже неактуальна, нажми /start'
+    )

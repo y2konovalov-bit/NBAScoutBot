@@ -3,7 +3,7 @@ from telebot.storage import StateMemoryStorage
 from telebot import custom_filters
 
 from config import TG_API_TOKEN
-from handlers_menu import register_menu_handlers
+from handlers_menu import register_menu_handlers, register_stale_callback_handler
 from handlers_schedule import register_schedule_handlers
 from handlers_subscribes import register_subscribe_handlers
 
@@ -16,6 +16,7 @@ bot.add_custom_filter(custom_filters.StateFilter(bot))
 register_menu_handlers(bot)
 register_schedule_handlers(bot)
 register_subscribe_handlers(bot)
+register_stale_callback_handler(bot)
 
 
 bot.infinity_polling()

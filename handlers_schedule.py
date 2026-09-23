@@ -69,24 +69,12 @@ def register_schedule_handlers(bot):
             reply_markup=main_menu(),
         )
 
-    @bot.message_handler(
-        func=lambda message: True,
-        state=SheduleStates.choose_team,
-    )
+    @bot.message_handler(state=SheduleStates.choose_team)
+    @bot.message_handler(state=SheduleStates.choose_type)
     def handle_invalid_text_choose_team(message):
         bot.send_message(
             message.chat.id,
-            'Пожалуйста, выберите команду с помощью кнопок, а не текстом.',
+            'Пожалуйста, сделайте выбор с помощью кнопок, а не текстом.',
             reply_markup=teams_keyboard(),
         )
 
-    @bot.message_handler(
-        func=lambda message: True,
-        state=SheduleStates.choose_type,
-    )
-    def handle_invalid_text_choose_type(message):
-        bot.send_message(
-            message.chat.id,
-            'Пожалуйста, выберите тип расписания с помощью кнопок.',
-            reply_markup=schedule_type_keyboard(),
-        )

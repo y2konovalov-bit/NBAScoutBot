@@ -4,3 +4,4 @@ players_stats_cache.json
 standings_cache.json
 config.py
 response.json
+__pycache__
