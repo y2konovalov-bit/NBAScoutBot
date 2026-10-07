@@ -1,4 +1,5 @@
 import json
+import time
 
 SUBSCRIPTIONS_FILE = "subscriptions.json"
 
@@ -42,7 +43,24 @@ def delete_user_team(user_id, team_name):
     save_json(SUBSCRIPTIONS_FILE, data)
     return True
 
-
 def load_user_teams(user_id):
     data = load_json(SUBSCRIPTIONS_FILE)
     return data.get(str(user_id), [])
+
+def load_cache(file_name, max_age_hours=6):
+    try:
+        with open(file_name, "r", encoding="utf-8") as f:
+            cache = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+
+    age_hours = (time.time() - cache.get('fetched_at', 0)) / 3600
+    if age_hours > max_age_hours:
+        return None
+
+    return cache.get('data')
+
+def save_cache(file_name, data):
+    cache = {"fetched_at": time.time(), "data": data}
+    with open(file_name, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
