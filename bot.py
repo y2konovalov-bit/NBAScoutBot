@@ -6,6 +6,8 @@ from config import TG_API_TOKEN
 from handlers_menu import register_menu_handlers, register_stale_callback_handler
 from handlers_schedule import register_schedule_handlers
 from handlers_subscribes import register_subscribe_handlers
+from handlers_standings import register_standings_handlers
+from handlers_player import register_player_handlers
 
 state_storage = StateMemoryStorage()
 
@@ -16,7 +18,8 @@ bot.add_custom_filter(custom_filters.StateFilter(bot))
 register_menu_handlers(bot)
 register_schedule_handlers(bot)
 register_subscribe_handlers(bot)
-register_stale_callback_handler(bot)
-
+register_standings_handlers(bot)
+register_player_handlers(bot)
+register_stale_callback_handler(bot) # ловит все callback`и`
 
 bot.infinity_polling()

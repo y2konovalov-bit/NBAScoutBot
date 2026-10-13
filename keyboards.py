@@ -41,3 +41,11 @@ def favorites_teams(team_names):
     ]
     markup.add(*buttons)
     return markup
+
+def standings_view_keyboard():
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    markup.add(
+        types.InlineKeyboardButton(text="Вся таблица", callback_data="standings:all"),
+        types.InlineKeyboardButton(text="По конференциям", callback_data="standings:conf")
+    )
+    return markup

@@ -5,3 +5,6 @@ standings_cache.json
 config.py
 response.json
 __pycache__
+desktop.ini
+requirements.txt
+player_stats_cache.json

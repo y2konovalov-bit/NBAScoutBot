@@ -6,3 +6,9 @@ class SheduleStates(StatesGroup):
     
 class SubscribeStates(StatesGroup):
     choose_team = State()
+
+class StandingsStates(StatesGroup):
+    choose_view = State()
+
+class PlayerStates(StatesGroup):
+    entering_name = State()
